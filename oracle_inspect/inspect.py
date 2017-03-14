@@ -97,6 +97,10 @@ def rman_by_popen():
     return Popen(["rman", "target", "/"], stdout=PIPE, stdin=PIPE)
 
 
+def is_rac():
+    pass
+
+
 def check_local_disk():
     if os.name == 'nt':
         _ = Popen(["wmic", "LOGICALDISK", "list", "BRIEF"], stdout=PIPE, stdin=PIPE)
