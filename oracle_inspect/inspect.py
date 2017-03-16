@@ -249,9 +249,18 @@ def date_interval_deal(time_range):
         return st if st else time_min, et if et else time_max
 
 
+def date_from_now(t):
+    try:
+        now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        start_time = (datetime.datetime.now() - datetime.timedelta(days=t)).strftime("%Y%m%d%H%M%S")
+        return "{0}-{1}".format(start_time, now)
+    except:
+        return ''
+
+
 def out_2_html(result, outfile=stdout):
     """
-    view the module code, it overwrites the lshift(<<) Operator, maybe not friendly to PEP8
+    view the module code, she overwrites the lshift(<<) Operator, maybe not friendly to PEP8
     :param result:
     :param outfile:
     """
@@ -280,11 +289,13 @@ def out_2_html(result, outfile=stdout):
 
 
 if __name__ == '__main__':
-    opt = OptionParser(version="%prog version: 1.1beta")
+    opt = OptionParser(version="%prog version: 1.2beta")
     opt.add_option("-a", "--all", help="check all list", action="store_true",
                    dest="check_all", default=False)
-    opt.add_option("-d", "--date", help="Format:yyyymmddHHMMSS,ex:20170808181818-20180808181818",
+    opt.add_option("", "--date", help="Format:yyyymmddHHMMSS,ex:20170808181818-20180808181818",
                    action="store", type="string", dest="date_interval")
+    opt.add_option("-d", "", help="Days before current time, -d 7 means 7 days before",
+                   action="store", type="int", dest="days_from_now")
     opt.add_option("", "--alert", help="alert log",
                    action="store_true", dest="alert_log")
     opt.add_option("", "--fsinfo", help="local disk",
@@ -295,11 +306,14 @@ if __name__ == '__main__':
                    action="store_true", dest="asmdisk")
     opt.add_option("", "--rman", help="rman backup check",
                    action="store_true", dest="rmanbackup")
-    opt.add_option("-o", "--outfile", help="output to html",
+    opt.add_option("-o", "--outfile", help="output to html, only support for '-a'",
                    action="store", type="string", dest="outfile")
     (options, arg) = opt.parse_args()
 
-    _st, _et = date_interval_deal(options.date_interval)
+    if options.days_from_now:
+        _st, _et = date_interval_deal(date_from_now(options.days_from_now))
+    else:
+        _st, _et = date_interval_deal(options.date_interval)
     _out_file = options.outfile
     if options.check_all:
         loc = locals()
