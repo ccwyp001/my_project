@@ -143,7 +143,6 @@ def check_asm_disk():
     return out
 
 
-@limit_user('oracle')
 def check_tablespace_usage():
     sqlplus = sqlplus_by_popen()
     sqlplus.stdin.write(TABLESPACE_USAGE)
@@ -151,7 +150,6 @@ def check_tablespace_usage():
     return out
 
 
-@limit_user('oracle')
 def check_rman_backup_status():
     sqlplus = sqlplus_by_popen()
     sqlplus.stdin.write(RMAN_STATUS)
@@ -159,7 +157,6 @@ def check_rman_backup_status():
     return out
 
 
-@limit_user('oracle')
 def check_rman_backup():
     rman = rman_by_popen()
     rman.stdin.write("REPORT NEED BACKUP RECOVERY WINDOW OF 7 DAYS;" + os.linesep)
