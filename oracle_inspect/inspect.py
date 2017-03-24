@@ -5,7 +5,7 @@ from sys import stdout
 from subprocess import Popen, PIPE
 from optparse import OptionParser
 from getpass import getuser
-
+import re
 import os
 import pyh
 
@@ -64,6 +64,8 @@ SELECT to_char(start_time, 'mm/dd/yy hh24:mi') AS "START",
  WHERE start_time > (SYSDATE - 15)
  ORDER BY session_key DESC;"""
 
+BOOL_RAC = """select value from v$parameter where name='cluster_database';"""
+
 
 def limit_user(user):
     """
@@ -84,7 +86,7 @@ def limit_user(user):
 
         return __error
 
-    if os.name == 'nt' or user == getuser():
+    if os.name == 'nt' or getuser() in user:
         return _deco
     return _error
 
@@ -98,14 +100,37 @@ def rman_by_popen():
 
 
 def is_rac():
-    pass
+    sqlplus = sqlplus_by_popen()
+    sqlplus.stdin.write("set pagesize 0" + os.linesep)
+    sqlplus.stdin.write(BOOL_RAC)
+    out, err = sqlplus.communicate()
+    return False if out.startswith('FALSE') else True
 
 
-def check_local_disk():
+def get_rac_node_list():
+    _ = Popen(["srvctl", "config", "nodeapps"], stdout=PIPE, stdin=PIPE)
+    out, err = _.communicate()
+    return re.findall('(?<=VIP exists: /).*?/(.*?)(?=/)', out, re.MULTILINE)
+
+
+def remote_command(ip):
+    _ = Popen(["ssh", "-q", "-o StrictHostKeyChecking=no", "%s" % ip, "df -TH"], stdout=PIPE, stdin=PIPE)
+    out, err = _.communicate()
+    return out.decode("gbk")
+
+
+def check_file_system_usage():
     if os.name == 'nt':
         _ = Popen(["wmic", "LOGICALDISK", "list", "BRIEF"], stdout=PIPE, stdin=PIPE)
+
     else:
-        _ = Popen(["df", "-TH"], stdout=PIPE, stdin=PIPE)
+        if is_rac():
+            _ = {}
+            for ip in get_rac_node_list():
+                _['VIP: %s' % ip] = remote_command(ip)
+            return _
+        else:
+            _ = Popen(["df", "-TH"], stdout=PIPE, stdin=PIPE)
     out, err = _.communicate()
     return out.decode("gbk")
 
@@ -269,23 +294,33 @@ def out_2_html(result, outfile=stdout):
     page.body.attributes['cl'] = 'awr'
     page << pyh.a(name='top')
     page << pyh.h2(cl='awr') << "Main Report"
+
+    page = ul_parse(page, result)
+
+    page.printOut(outfile)
+    print "Outfile Path: ", os.path.join(cwd_dir, outfile)
+
+
+def ul_parse(page, result):
     menu_ul = page << pyh.ul()
     for key, val in result.items():
         menu_ul << pyh.li(cl='awr') << pyh.a(cl='awr', href='#%s' % key) << str(key)
 
         page << pyh.a(name='%s' % key)
         page << pyh.h3(cl='awr') << str(key)
-        unit_ul = page << pyh.ul()
-        for l in val.split('\n'):
-            if l.strip():
-                unit_ul << pyh.li(cl='awr') << pyh.pre(cl='awr') << str(l)
+
+        if isinstance(val, dict):
+            page = ul_parse(page, val)
+        else:
+            unit_ul = page << pyh.ul()
+            for l in val.split('\n'):
+                if l.strip():
+                    unit_ul << pyh.li(cl='awr') << pyh.pre(cl='awr') << str(l)
 
         page << pyh.br()
         page << pyh.a(cl='awr', href='#top') << "Back to Top"
         page << pyh.hr()
-
-    page.printOut(outfile)
-    print "Outfile Path: ", os.path.join(cwd_dir, outfile)
+    return page
 
 
 if __name__ == '__main__':
@@ -335,7 +370,7 @@ if __name__ == '__main__':
     if options.tablespace:
         print check_tablespace_usage()
     if options.fsinfo:
-        print check_local_disk()
+        print check_file_system_usage()
     if options.asmdisk:
         print check_asm_disk()
     if options.rmanbackup:
