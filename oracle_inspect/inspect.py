@@ -179,7 +179,10 @@ def get_file_alert_log():
 
 
 def deal_alert_log(st, et):
-    alert_log_file = get_file_alert_log()
+    try:
+        alert_log_file = get_file_alert_log()
+    except OSError:
+        return 'Get alert log fail'
     time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     tmpfile = os.path.join(cwd_dir, time + ".log")
 
