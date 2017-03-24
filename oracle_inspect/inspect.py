@@ -294,33 +294,42 @@ def out_2_html(result, outfile=stdout):
     page.body.attributes['cl'] = 'awr'
     page << pyh.a(name='top')
     page << pyh.h2(cl='awr') << "Main Report"
-
     page = ul_parse(page, result)
-
     page.printOut(outfile)
     print "Outfile Path: ", os.path.join(cwd_dir, outfile)
 
 
-def ul_parse(page, result):
+def ul_parse(page, result, sub=False, key_name=''):
     menu_ul = page << pyh.ul()
     for key, val in result.items():
         menu_ul << pyh.li(cl='awr') << pyh.a(cl='awr', href='#%s' % key) << str(key)
-
         page << pyh.a(name='%s' % key)
-        page << pyh.h3(cl='awr') << str(key)
-
+        if sub:
+            page << pyh.h4(cl='awr') << str(key)
+        else:
+            page << pyh.h3(cl='awr') << str(key)
         if isinstance(val, dict):
-            page = ul_parse(page, val)
+            page = ul_parse(page, val, True, str(key))
         else:
             unit_ul = page << pyh.ul()
             for l in val.split('\n'):
                 if l.strip():
                     unit_ul << pyh.li(cl='awr') << pyh.pre(cl='awr') << str(l)
-
-        page << pyh.br()
-        page << pyh.a(cl='awr', href='#top') << "Back to Top"
-        page << pyh.hr()
+            page << pyh.br()
+            if sub:
+                page << pyh.a(cl='awr', href='#%s' % key_name) << "Back to %s" % key_name
+                page << pyh.br()
+            page << pyh.a(cl='awr', href='#top') << "Back to Top"
+            page << pyh.hr()
     return page
+
+
+def display_values(obj):
+    if isinstance(obj, list):
+        return ''.join([display_values(o) for o in obj])
+    if isinstance(obj, dict):
+        return ''.join([i + '\n' + display_values(o) for i, o in obj.items()])
+    return obj
 
 
 if __name__ == '__main__':
@@ -361,20 +370,20 @@ if __name__ == '__main__':
         if _out_file:
             out_2_html(_result, _out_file)
         else:
-            print ''.join(_result.values())
+            print display_values(_result)
         print "log path truncated from alert log: ", deal_alert_log(_st, _et)
         exit(0)
 
     if options.alert_log:
         print deal_alert_log(_st, _et)
     if options.tablespace:
-        print check_tablespace_usage()
+        print display_values(check_tablespace_usage())
     if options.fsinfo:
-        print check_file_system_usage()
+        print display_values(check_file_system_usage())
     if options.asmdisk:
-        print check_asm_disk()
+        print display_values(check_asm_disk())
     if options.rmanbackup:
-        print check_rman_backup_status()
-        print check_rman_backup()
+        print display_values(check_rman_backup_status())
+        print display_values(check_rman_backup())
     if not any(options.__dict__.values()):
         opt.print_help()
