@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import unittest
-from oracle_inspect.inspect import iter_dichotomy_from_mid, date_interval_deal
+from oracle_inspect.o_inspect import iter_dichotomy_from_mid, date_interval_deal
 import os
 
 
