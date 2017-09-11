@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2 col-md-2 col-lg-2 sidebar">
+            <ul class="nav nav-sidebar" role="tablist" id="myTab">
+                <li role="presentation" class="active"><a href="#Overview" role="tab"
+                                                          data-toggle="tab">Overview</a>
+                </li>
+                <li role="presentation" id="reports_li"><a href="#Reports" role="tab"
+                                                           data-toggle="tab">Reports</a>
+                </li>
+                <li role="presentation" id="serverlist_li"><a href="#Analytics" role="tab"
+                                                              data-toggle="tab">Analytics</a></li>
+                <li role="presentation" id="export_li"><a href="#Export" role="tab" data-toggle="tab">Export</a>
+                </li>
+                <li role="presentation" id="checklist_li"><a href="#Checklist" role="tab"
+                                                             data-toggle="tab">Checklist</a></li>
+            </ul>
+        </div>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="Overview">
+                {% include "indexlist/overview.html" %}
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="Reports">
+                {% include "indexlist/reports.html" %}
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="Analytics">
+                {% include "indexlist/analytics.html" %}
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="Export">
+                {% include "indexlist/export.html" %}
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="Checklist">
+                {% include "indexlist/checklist.html" %}
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-sm" id="alertMsgModal" tabindex="-1" role="dialog"
+         aria-labelledby="alertMsgModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h3 class="modal-title" id="alert_msg_text"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

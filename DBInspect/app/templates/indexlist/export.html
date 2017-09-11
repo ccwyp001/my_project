@@ -1,0 +1,34 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h2 class="sub-header">Export </h2>
+
+    <div class="panel panel-default">
+        <div id='export_none_list' class="panel-body">
+            <h3 class="bg-info text-center">None</h3>
+        </div>
+        <div id='inspectgroup_table' class="panel-body table-responsive" style="height: 200px;overflow: auto">
+            <table class="table table-striped table-bordered table-hover table-condensed">
+                <thead id="inspectgroup_table_head">
+                </thead>
+                <tbody id="inspectgroup_table_body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <input type="hidden" name="ids" id="export_ids" value=""/>
+        <div id='exportlist_table' class="panel-body table-responsive" style="height: 200px;overflow: auto">
+            <div id='export_html' class="panel-body">
+                <button type="button" class="btn btn-info btn-sm" onclick="doc_create()">
+                    <span class="glyphicon glyphicon-new-window"></span>Doc Export
+                </button>
+            </div>
+            <table class="table table-striped table-bordered table-hover table-condensed">
+                <thead id="exportlist_table_head">
+                </thead>
+                <tbody id="exportlist_table_body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

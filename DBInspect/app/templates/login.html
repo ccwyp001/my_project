@@ -1,0 +1,23 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="container">
+
+    <form action="" method="post" name="login" class="form-signin" role="form">
+        {{ form.hidden_tag() }}
+
+        <h1 class="form-signin-heading">Sign In</h1>
+
+        {{ form.username(type="username",class="form-control",placeholder="User name",required='') }}
+
+        {{ form.password(type="password",class="form-control",placeholder="Password",required='') }}
+
+        <p>{{ form.remember_me }} Remember Me</p>
+
+        <p><input class="btn btn-lg btn-primary btn-block" type="submit" value="Sign In"></p>
+    </form>
+</div>
+{% endblock %}

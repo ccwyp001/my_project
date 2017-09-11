@@ -1,0 +1,132 @@
+{% block table_templ %}
+{% for inspect in doc.inspect %}
+<w:p w:rsidR="006E4F00" w:rsidRPr="00365BAB" w:rsidRDefault="006E4F00" w:rsidP="006E4F00">
+    <w:pPr>
+        <w:spacing w:before="96" w:after="96"/>
+    </w:pPr>
+</w:p>
+<w:p w:rsidR="006E4F00" w:rsidRPr="00365BAB" w:rsidRDefault="006E4F00" w:rsidP="00B6525F">
+<w:pPr>
+    <w:pStyle w:val="2"/>
+</w:pPr>
+<w:r w:rsidRPr="00365BAB">
+    <w:t>{{inspect.title}}</w:t>
+</w:r>
+</w:p>
+<w:p w:rsidR="006E4F00" w:rsidRPr="00365BAB" w:rsidRDefault="006E4F00" w:rsidP="006E4F00">
+<w:pPr>
+    <w:pStyle w:val="ac"/>
+    <w:spacing w:before="124" w:after="124"/>
+    <w:rPr>
+        <w:sz w:val="21"/>
+    </w:rPr>
+</w:pPr>
+<w:r w:rsidRPr="00365BAB">
+    <w:rPr>
+        <w:sz w:val="21"/>
+    </w:rPr>
+    <w:t>{{inspect.message}}</w:t>
+</w:r>
+</w:p>
+{% for table in inspect.table %}
+<w:p w:rsidR="006E4F00" w:rsidRPr="00365BAB" w:rsidRDefault="006E4F00" w:rsidP="00B6525F">
+<w:pPr>
+    <w:pStyle w:val="3"/>
+</w:pPr>
+<w:r w:rsidRPr="00365BAB">
+    <w:t>{{table.title}}</w:t>
+</w:r>
+</w:p>
+{% for tab in table.table %}
+<w:p w:rsidR="006E4F00" w:rsidRPr="00365BAB" w:rsidRDefault="006E4F00" w:rsidP="00B6525F">
+<w:pPr>
+    <w:pStyle w:val="4"/>
+</w:pPr>
+<w:r w:rsidRPr="00365BAB">
+    <w:t>{{tab.title}}</w:t>
+</w:r>
+</w:p>
+<w:tbl>
+<w:tblPr>
+    <w:tblBorders>
+        <w:top w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:left w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:right w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:insideH w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+        <w:insideV w:val="single" w:sz="4" w:space="0" w:color="auto"/>
+    </w:tblBorders>
+    <w:tblLook w:val="0000" w:firstRow="0" w:lastRow="0" w:firstColumn="0" w:lastColumn="0"
+               w:noHBand="0" w:noVBand="0"/>
+</w:tblPr>
+<w:tr w:rsidR="006E4F00" w:rsidRPr="00365BAB" w:rsidTr="00120DC3">
+{% for key in tab.n_keys %}
+    <w:tc>
+        <w:tcPr>
+            <w:shd w:val="clear" w:color="auto" w:fill="D6D6AD"/>
+        </w:tcPr>
+        <w:p w:rsidR="006E4F00" w:rsidRPr="00365BAB" w:rsidRDefault="006E4F00"
+             w:rsidP="00B6246F">
+            <w:pPr>
+                <w:pStyle w:val="a3"/>
+                <w:spacing w:before="124" w:after="124"/>
+                <w:ind w:left="0"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00365BAB">
+                <w:rPr>
+                    <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/>
+                </w:rPr>
+                <w:t>{{key}}</w:t>
+            </w:r>
+        </w:p>
+    </w:tc>
+{% endfor %}
+</w:tr>
+{% for value in tab.n_values %}
+<w:tr w:rsidR="00816F25" w:rsidRPr="00365BAB" w:rsidTr="00120DC3">
+    {% for val in value %}
+    <w:tc>
+        <w:tcPr>
+            <w:tcW w:w="317" w:type="pct"/>
+        </w:tcPr>
+        {% for v in val.split('\n') %}
+        {% if v.strip() %}
+        <w:p w:rsidR="00816F25" w:rsidRDefault="00220E36" w:rsidP="00BE705F">
+            <w:pPr>
+                <w:pStyle w:val="a3"/>
+                <w:spacing w:before="124" w:after="124"/>
+                <w:ind w:left="0"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"
+                              w:hint="eastAsia"/>
+                </w:rPr>
+                <w:t>{{v}}
+                </w:t>
+            </w:r>
+            <w:r>
+                <w:rPr>
+                    <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"
+                              w:hint="eastAsia"/>
+                </w:rPr>
+                <w:t></w:t>
+            </w:r>
+        </w:p>
+        {% endif %}
+        {% endfor %}
+    </w:tc>
+    {% endfor %}
+</w:tr>
+{% endfor %}
+</w:tbl>
+{% endfor %}
+{% endfor %}
+{% endfor %}
+        {% endblock %}
