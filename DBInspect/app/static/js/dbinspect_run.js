@@ -135,7 +135,6 @@ function start_inspect() {
         dataType: 'json',
         success: function (data) {
             $('li#reports_li a').tab('show');
-            var va = data.data[0];
         },
         error: function (xhr, type) {
         }
@@ -246,27 +245,5 @@ function clickObj(obj) {
         evt2.initEvent("click", false, false);
         obj.dispatchEvent(evt2);
         obj.click();
-    }
-}
-
-function getBrowser() {
-    var ua = window.navigator.userAgent;
-    var isIE = window.ActiveXObject != undefined && ua.indexOf("MSIE") != -1;
-    var isFirefox = ua.indexOf("Firefox") != -1;
-    var isOpera = window.opr != undefined;
-    var isChrome = ua.indexOf("Chrome") && window.chrome;
-    var isSafari = ua.indexOf("Safari") != -1 && ua.indexOf("Version") != -1;
-    if (isIE) {
-        return "IE";
-    } else if (isFirefox) {
-        return "Firefox";
-    } else if (isOpera) {
-        return "Opera";
-    } else if (isChrome) {
-        return "Chrome";
-    } else if (isSafari) {
-        return "Safari";
-    } else {
-        return "Unkown";
     }
 }
