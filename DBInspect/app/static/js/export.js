@@ -60,7 +60,6 @@ function inspect_group_show() {
     });
 }
 
-
 function inspect_group_list_show(obj){
     var data = {
         "id":$(obj).attr('id'),
