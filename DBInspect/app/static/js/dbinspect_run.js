@@ -1,9 +1,3 @@
-function inspect_pre_run_one(obj) {
-    var cnm = $(obj).parent().parent().attr('id');
-    $('#inspect_server_id').attr('value', cnm);
-    check_group_show();
-    $('#InspectRunModal').modal('show');
-}
 
 function inspect_pre_run_all() {
     check_group_show();
@@ -133,7 +127,7 @@ function start_inspect() {
         url: '/inspect/run',
         data: data,
         dataType: 'json',
-        success: function (data) {
+        success: function () {
             $('li#reports_li a').tab('show');
         },
         error: function (xhr, type) {
@@ -177,16 +171,6 @@ function check_group_show() {
     });
 }
 
-function alert_msg(e) {
-    $('#alert_msg_text').text(e);
-    $('#alertMsgModal').modal('show');
-
-    setTimeout(function () {
-        $('#alertMsgModal').modal('hide');
-    }, 1000);
-}
-
-
 function show_html() {
     if ($('#report_display').hasClass('hidden')) {
         alert_msg('please select inspect!');
@@ -199,51 +183,3 @@ function show_html() {
     w.document.close();
 }
 
-
-function doc_create() {
-    var ids = $('#export_ids').attr('value');
-    if (ids == '') {
-        alert_msg('please select one item at least!');
-        return;
-    }
-    var data = {
-        "now": new Date().getTime(),
-        "ids": ids
-    };
-    $.ajax({
-        type: 'GET',
-        url: '/test',
-        dataType: 'html',
-        data: data,
-        success: function (data) {
-            downloadFile(new Date().getTime() + '.doc', data);
-        },
-        error: function (xhr, type) {
-        }
-
-    });
-}
-
-
-function downloadFile(fileName, content) {
-    var aLink = document.createElement('a');
-    var blob = new Blob([content]);
-    aLink.download = fileName;
-    aLink.href = URL.createObjectURL(blob);
-    clickObj(aLink);
-}
-
-function clickObj(obj) {
-    if (getBrowser() == 'Firefox') {
-        var evt1 = document.createEvent("MouseEvents");
-        evt1.initEvent("click", false, false);
-        obj.dispatchEvent(evt1);
-        obj.click();
-    }
-    else {
-        var evt2 = document.createEvent("HTMLEvents");
-        evt2.initEvent("click", false, false);
-        obj.dispatchEvent(evt2);
-        obj.click();
-    }
-}

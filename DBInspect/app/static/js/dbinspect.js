@@ -54,6 +54,15 @@ function initTableCheckbox(table_name,hidden_id) {
     });
 }
 
+function alert_msg(e) {
+    $('#alert_msg_text').text(e);
+    $('#alertMsgModal').modal('show');
+
+    setTimeout(function () {
+        $('#alertMsgModal').modal('hide');
+    }, 1000);
+}
+
 function trim(s){
     return s.replace(/(^\s*)|(\s*$)/g, "");
 }
