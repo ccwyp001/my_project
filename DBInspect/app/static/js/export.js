@@ -124,10 +124,8 @@ function doc_create() {
         },
         error: function (xhr, type) {
         }
-
     });
 }
-
 
 function downloadFile(fileName, content) {
     var aLink = document.createElement('a');

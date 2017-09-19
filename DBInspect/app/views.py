@@ -85,10 +85,7 @@ def test_aaa():
                                ), 200, {'Content-Type': 'application/xml'}
     except Exception as e:
         print traceback.format_exc()
-        pass
-    return render_template('doc_xml_templ/Template.xml',
-                           doc=doc,
-                           ), 200, {'Content-Type': 'application/xml'}
+        return
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -263,11 +260,12 @@ def serverlist_add():
 @login_required
 def serverlist():
     c_ids = request.args.get('id', '')
-    server_list = Server.query.all()
     if c_ids:
         server_list = []
         for c_id in c_ids:
             server_list += Server.query.filter(Server.id == c_id).all()
+    else:
+        server_list = Server.query.all()
     l0 = []
     for server in server_list:
         l1 = ['id', 'describe', 'hostname', 'plat', 'username', 'password', 'root_password', 'port']
